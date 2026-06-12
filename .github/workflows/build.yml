@@ -12,13 +12,13 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Fix git safe directory
-        run: git config --global --add safe.directory /__w/GodMode9/GodMode9
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
       - name: Install firmtool
         run: |
-          apt-get update
-          apt-get install -y python3-pip
-          pip3 install firmtool
+          pacman -Syu --noconfirm
+          pacman -S --noconfirm python python-pip
+          python3 -m pip install --break-system-packages firmtool
 
       - name: Build firm
         run: make firm
