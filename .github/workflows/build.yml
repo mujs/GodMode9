@@ -6,24 +6,26 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container: devkitpro/devkitarm
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Fix git safe directory
-        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+      - name: Install devkitPro
+        run: |
+          wget https://github.com/devkitPro/pacman/releases/latest/download/devkitpro-pacman.deb
+          sudo apt install -y ./devkitpro-pacman.deb
+          sudo dkp-pacman -Syu --noconfirm
+          sudo dkp-pacman -S --noconfirm 3ds-dev
 
       - name: Install firmtool
         run: |
-          pacman -Syu --noconfirm
-          pacman -S --noconfirm git python
-          git clone https://github.com/TuxSH/firmtool.git /tmp/firmtool
-          cd /tmp/firmtool
-          python3 setup.py install
+          sudo apt install -y python3-pip
+          pip3 install firmtool
 
       - name: Build firm
-        run: make firm
+        run: |
+          source /etc/profile.d/devkit-env.sh
+          make firm
 
       - name: Upload GodMode9.firm
         uses: actions/upload-artifact@v4
