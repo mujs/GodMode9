@@ -17,8 +17,10 @@ jobs:
       - name: Install firmtool
         run: |
           pacman -Syu --noconfirm
-          pacman -S --noconfirm python python-pip
-          python3 -m pip install --break-system-packages firmtool
+          pacman -S --noconfirm git python
+          git clone https://github.com/TuxSH/firmtool.git /tmp/firmtool
+          cd /tmp/firmtool
+          python3 setup.py install
 
       - name: Build firm
         run: make firm
